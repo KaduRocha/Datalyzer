@@ -28,6 +28,9 @@ FOLDERS = [
 # Arquivos básicos do projeto
 FILES = {}
 
+VENV_DIR = Path(".venvDatalyzer")
+
+
 def create_folders():
     for folder in FOLDERS:
         Path(folder).mkdir(parents=True, exist_ok=True)
@@ -41,25 +44,34 @@ def create_files():
     logger.info("[OK] - Arquivos base criados")
 
 def create_virtualenv():
-    venv_dir = Path("venv")
-    if not venv_dir.exists():
-        venv.EnvBuilder(with_pip=True).create(venv_dir)
+    if not VENV_DIR.exists():
+        venv.EnvBuilder(with_pip=True).create(VENV_DIR)
         logger.info("[OK] - Ambiente virtual criado")
+        if VENV_DIR.exists() and VENV_DIR.is_dir():
+            install_requirements()
     else:
         logger.info("[INFO] - Ambiente virtual já existe")
 
+
 def install_requirements():
+    """Instala as dependências usando o pip do ambiente virtual."""
+    pip_executable = (
+        VENV_DIR / "Scripts" / "pip.exe"  # Windows
+        if os.name == "nt"
+        else VENV_DIR / "bin" / "pip"    # Linux/Mac
+    )
+
     req_file = Path("requirements.txt")
     if req_file.exists() and req_file.stat().st_size > 0:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-        logger.info("[OK] - Dependências instaladas")
+        subprocess.check_call([str(pip_executable), "install", "-r", str(req_file)])
+        logger.info("[OK] - Dependências instaladas no ambiente virtual")
     else:
-        logger.info("[INFO] - Nenhuma dependência para instalar")
+        logger.info("[INFO] - Nenhuma dependência")
 
 if __name__ == "__main__":
     logger.info("=== PREPARANDO AMBIENTE DO PROJETO! ===")
     create_folders()
     # create_files()
-    # create_virtualenv()
-    install_requirements()
+    create_virtualenv()
+    # install_requirements()
     logger.info("=== AMBIENTE PRONTO! ===")
