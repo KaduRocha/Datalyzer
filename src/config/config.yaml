@@ -1,0 +1,118 @@
+sources:
+### ORIGEM VINDA DE DATABASE ###
+  # origemA: 
+  #   type: database
+  #   db_type: postgresql  # ou oracle / sqlserver / mysql
+  #   host: localhost
+  #   port: 5432
+  #   database: nome_banco
+  #   username: usuario
+  #   password: senha
+  #   query: "SELECT * FROM tabela_exemplo"
+  #   where: "ativo = true AND data_cadastro >= '2024-01-01'"  # <- opcional
+  
+  origemB: 
+    type: database
+    db_type: postgresql  # ou oracle / sqlserver / mysql
+    host: localhost
+    port: 5432
+    database: comparador
+    username: postgres
+    password: Oshikawa!8
+    table: origemB
+    where: ""  # <- opcional.
+    columns: ["MES_COMPETENCIA", "MES_REFERENCIA", "UF", "CODIGO_MUNICIPIO_SIAFI", "NOME_MUNICIPIO", "CPF_FAVORECIDO", "NIS_FAVORECIDO", "NOME_FAVORECIDO", "VALOR PARCELA"]
+    key_columns: ["MES_REFERENCIA","NIS_FAVORECIDO","VALOR PARCELA"]
+    # query: ''
+    query: |
+      SELECT
+          MES_COMPETENCIA
+        , MES_REFERENCIA
+        , UF
+        , CODIGO_MUNICIPIO_SIAFI
+        , NOME_MUNICIPIO
+        , CPF_FAVORECIDO
+        , NIS_FAVORECIDO
+        , NOME_FAVORECIDO
+        , ROUND(VALOR_PARCELA,2) AS VALOR_PARCELA
+      FROM public.origemB 
+    # PARAMETRO QUERY <- opcional. USE | (PIPE) para inserir texto com quebra de linha.
+
+
+### ORIGEM VINDA DE ARQUIVOS ###
+  origemA:
+    type: file
+    file_path: data/input/origemA.csv
+    separator: ";"
+    encoding: "utf-8"
+    dtype: "str"
+    key_columns: ["MES_REFERENCIA","NIS_FAVORECIDO","VALOR PARCELA"]
+
+  # origemB:
+  #   type: file
+  #   file_path: data/input/origemB.csv
+  #   separator: ";"
+  #   encoding: "utf-8"
+  #   dtype: "str"
+  #   primary_keys: ["MÊS REFERÊNCIA", "NIS FAVORECIDO"]
+
+# validation:
+#   key_columns:
+#     # - "MÊS REFERÊNCIA"
+#     # - "NIS FAVORECIDO"
+#     # - "VALOR PARCELA"
+#     - "MES_REFERENCIA"
+#     - "NIS_FAVORECIDO"
+#     - "VALOR_PARCELA"
+
+
+# comparison:
+#   direct_comparison:
+#     destino_encoding: utf-8
+#     destino_file: data/input/origemB.txt
+#     destino_separator: ;
+#     enabled: true
+#     origem_encoding: utf-8
+#     origem_file: data/input/origemA.txt
+#     origem_separator: ;
+#   key_columns:
+#   - MÊS REFERÊNCIA
+#   - NIS FAVORECIDO
+# logging:
+#   file: logs/processor.log
+#   format: '%(asctime)s - %(levelname)s - %(message)s'
+#   level: INFO
+# output:
+#   csv:
+#     index: false
+#     separator: ;
+#   directory: data/output
+#   formats:
+#   - csv
+#   - json
+#   json:
+#     encoding: utf-8
+#     ensure_ascii: false
+#     indent: 2
+# processing:
+#   chunk_size: 10000
+#   memory_limit: 2GB
+#   parallel_processing: false
+# sources:
+#   origemA:
+#     dtype: str
+#     encoding: utf-8
+#     file_path: data/input/origemA.txt
+#     fill_na: ''
+#     separator: ;
+#   origemB:
+#     dtype: str
+#     encoding: utf-8
+#     file_path: data/input/origemB.txt
+#     fill_na: ''
+#     separator: ;
+# validation:
+#   max_file_size_mb: 1000
+#   validate_duplicates: true
+#   validate_null_percentage: 0.5
+#   validate_unique_percentage: 0.1
