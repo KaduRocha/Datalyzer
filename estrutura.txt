@@ -1,0 +1,49 @@
+datalyzer/
+│
+├── src/
+│   ├── cli/                    # Interface CLI (Click)
+│   │   └── main.py
+│   │
+│   ├── core/                   # Orquestração principal
+│   │   └── engine.py
+│   │
+│   ├── connectors/             # Conexões com fontes de dados
+│   │   ├── postgres.py
+│   │   ├── csv.py
+│   │   └── excel.py
+│   │
+│   ├── profiling/              # Estrutura do banco
+│   │   ├── schema_profiler.py
+│   │   └── table_profiler.py
+│   │
+│   ├── quality/                # Qualidade dos dados
+│   │   ├── duplicates.py
+│   │   ├── nulls.py
+│   │   └── stats.py
+│   │
+│   ├── recommendations/        # Sugestões inteligentes
+│   │   ├── index_suggester.py
+│   │   ├── schema_optimizer.py
+│   │   └── partitioning.py
+│   │
+│   ├── etl/                    # Migração e transformação
+│   │   ├── extractor.py
+│   │   ├── transformer.py
+│   │   └── loader.py
+│   │
+│   ├── adapters/               # chave pra escalabilidade
+│   │   ├── pandas_adapter.py
+│   │   └── spark_adapter.py   # (futuro)
+│   │
+│   ├── rust_core/              # integração com Rust
+│   │   └── (bindings)
+│   │
+│   ├── config/
+│   │   └── config.yaml
+│   │
+│   └── utils/
+│       └── logger.py
+│
+├── tests/
+├── pyproject.toml
+└── README.md
